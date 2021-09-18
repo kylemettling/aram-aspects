@@ -17,7 +17,7 @@ function App() {
     // console.log(process.env);
     // e.preventDefault();
     // fetch()
-    let summonerName = "W 0 N D E R";
+    let summonerName = "W 0 N D E R test";
     summonerName = encodeURIComponent(summonerName);
     // const regionString = "na1.api.riotgames.com";
     const requestString = axios(
