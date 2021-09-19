@@ -14,38 +14,40 @@ function App() {
   }, [data, summonerName]);
 
   async function submitInput(e) {
-    // console.log(process.env);
-    // e.preventDefault();
-    // fetch()
-    let summonerName = "W 0 N D E R test";
+    let summonerName = "W 0 N D E R";
     summonerName = encodeURIComponent(summonerName);
-    // const regionString = "na1.api.riotgames.com";
+
     const requestString = axios(
       `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}?api_key=${API_KEY}`
     );
 
-    // console.log(requestString);
-    // const fullRequest = regionString.concat(requestString);
-    // console.log(fullRequest);
-    console.log("object");
-    // const data = await requestString.data();
     const data = await requestString;
-    // const puuid = data.config;
-    // console.log(puuid);
     const getSummonerDetails = await axios(data.config.url);
     const puuid = getSummonerDetails.data.puuid;
-    // console.log(puuid);
+
+    console.log(puuid);
     console.log(
       `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${API_KEY}`
     );
     const summonerRequest = axios(
-      `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?api_key=${API_KEY}`
+      `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?count=1&api_key=${API_KEY}`
     );
     const summonerResponse = await summonerRequest;
-    // setData(JSON.stringify(data.config.url));
-    setData(JSON.stringify(summonerResponse.data));
-    console.log(summonerResponse.data);
-    // setData(puuid);
+    const gamesList = summonerResponse.data;
+    const gameData = {};
+
+    for (const game of gamesList) {
+      console.log(game);
+      gameData[game] = await axios(
+        `https://americas.api.riotgames.com/lol/match/v5/matches/${game}?api_key=${API_KEY}`
+      );
+    }
+    console.log(gameData);
+    // const gameRequest = await axios.get(
+    //   `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${id}/ids?count=5&api_key=${API_KEY}`
+    // );
+    // for()
+    setData(JSON.stringify(gamesList));
   }
 
   return (
